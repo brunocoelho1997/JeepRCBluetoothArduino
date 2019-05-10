@@ -43,18 +43,23 @@
  */
   boolean Jeep::throttle(int percentage)
   {
+
+    //if the percentage received is not valid...
+    if(percentage< 0 || percentage > 100)
+      return false;
+      
     /*
     *  initially defines the direction of the motors - if the car will go forward or backward
     */
     if(actualGearSelected == dGear)
     {
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
+      digitalWrite(in1, HIGH);
+      digitalWrite(in2, LOW);
     }
     else
     {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
+      digitalWrite(in1, LOW);
+      digitalWrite(in2, HIGH);
     }
     
     /*
@@ -70,7 +75,33 @@
     
     int pwm = (int) tmp;
     analogWrite(enA, pwm);
-    
+
+    return true;
+  }
+
+  /*
+  * This method is called when the user is steering the car
+  */
+  boolean Jeep::steering(int steeringSide)
+  {
+    //if the percentage received is not valid...
+    if(steeringSide != steeringLeft && steeringSide != steeringRight)
+      return false;
+      
+    if(steeringSide == steeringLeft)
+    {
+      digitalWrite(in3, HIGH);
+      digitalWrite(in4, LOW);
+    }
+    else
+    {
+      digitalWrite(in3, LOW);
+      digitalWrite(in4, HIGH);
+    }
+
+    analogWrite(enB, steeringSpeed);
+
+    return true;
   }
   
   String Jeep::toString()

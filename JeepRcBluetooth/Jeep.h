@@ -10,6 +10,7 @@ class Jeep
     boolean selectGearSelected(int newGearSelected);
     boolean selectGearType(int newGearType);
     boolean throttle(int percentage);
+    boolean steering(int steeringSide);
     String toString();
   private:
     int actualGearSelected; //may be a D (forward) or R (reverse)
