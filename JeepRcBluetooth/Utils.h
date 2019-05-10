@@ -4,15 +4,23 @@
 //constants
 
 //types of gear
-extern const int hightGear = 1;
-extern const int lowGear = 2;
+const int hightGear = 1;
+const int lowGear = 2;
 
 //selected gear
-extern const int dGear= 3;
-extern const int rGear = 4;
+const int dGear= 3;
+const int rGear = 4;
 
 
-
+// Motor A - motor which move forward and backward
+const int enA = 9;
+const int in1 = 8;
+const int in2 = 7;
+ 
+// Motor B - motor which change direction to left/right
+const int enB = 3;
+const int in3 = 5;
+const int in4 = 4;
 
 
 /*
