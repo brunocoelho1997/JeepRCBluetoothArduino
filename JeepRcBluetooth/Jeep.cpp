@@ -12,7 +12,7 @@
   boolean Jeep::selectGearType(int newGearType)
   {
     //if the gear is not recognized...
-    if(newGearType != hightGear && newGearType != lowGear)
+    if(newGearType != highGear && newGearType != lowGear)
       return false;
   
     //if it's the same gear...

@@ -4,7 +4,7 @@
 //constants
 
 //types of gear
-const int hightGear = 1;
+const int highGear = 1;
 const int lowGear = 2;
 
 //selected gear
@@ -15,6 +15,9 @@ const int rGear = 4;
 const int steeringLeft = 5;
 const int steeringRight = 6;
 const int steeringSpeed = 200;
+
+const int throttle = 7;
+
 
 
 
@@ -28,6 +31,8 @@ const int enB = 3;
 const int in3 = 5;
 const int in4 = 4;
 
+//delimiter of commands
+const String commandDelimiter = "_";
 
 /*
  * ---FONTS----
