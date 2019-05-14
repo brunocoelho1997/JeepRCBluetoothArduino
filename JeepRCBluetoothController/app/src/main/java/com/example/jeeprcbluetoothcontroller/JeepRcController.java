@@ -3,9 +3,11 @@ package com.example.jeeprcbluetoothcontroller;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
+import static com.example.jeeprcbluetoothcontroller.Config.MY_PERMISSIONS_REQUEST_CODE_BT;
 import static com.example.jeeprcbluetoothcontroller.Config.PERMISSIONS;
 
 public class JeepRcController {
@@ -45,5 +47,14 @@ public class JeepRcController {
 
     public void setBluetoothAdapter(BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
+    }
+
+    public void verifyIfBluetoothIsEnabled(Context context){
+        //if the bluetooth is not enabled
+        if (!bluetoothAdapter.isEnabled()) {
+            //Request to enable the bluetooth
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            ((Activity)context).startActivityForResult(enableBtIntent, MY_PERMISSIONS_REQUEST_CODE_BT);
+        }
     }
 }

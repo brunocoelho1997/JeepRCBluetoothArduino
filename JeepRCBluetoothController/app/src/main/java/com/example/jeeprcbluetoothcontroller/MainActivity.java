@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //set the activity always as portrait orientation
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         this.jeepRcController = new JeepRcController();
 
@@ -47,23 +52,8 @@ public class MainActivity extends AppCompatActivity {
             // Device doesn't support Bluetooth
             finish();
         }
-
-        //Request to enable the bluetooth
-        if (!bluetoothAdapterTmp.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, MY_PERMISSIONS_REQUEST_CODE_BT);
-        }
-
-        /*
-        //if the bluetooth wasn't turned on we need close the app
-        if (!bluetoothAdapterTmp.isEnabled()) {
-            throwAlertBuilder(getString(R.string.bluetooth_off_title),getString(R.string.bluetooth_off_desc));
-        }
-         */
-
-
         jeepRcController.setBluetoothAdapter(bluetoothAdapterTmp);
-
+        jeepRcController.verifyIfBluetoothIsEnabled(this);
     }
 
     @Override
