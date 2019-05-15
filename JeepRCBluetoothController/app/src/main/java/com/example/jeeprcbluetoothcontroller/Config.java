@@ -9,4 +9,7 @@ public class Config {
 
     public static final int MY_PERMISSIONS_REQUEST_CODE_BT = 2;
 
+
+    public static final String bluetoothRCDeviceName = "RCName";
+    public static final String bluetoothRCDeviceHardwareAddress = "MACADDRESS"; // MAC address
 }

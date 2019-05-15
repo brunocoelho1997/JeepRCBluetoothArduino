@@ -1,37 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_below="@+id/tv_title"
+        android:id="@+id/ll_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
         android:orientation="horizontal">
 
-        <Switch
+        <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="RC Jeep Blutooth"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <SeekBar
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:max="100"
-            android:min="0"
-            android:rotation="90"/>
+        <Button
+            android:id="@+id/btn_start_discoring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_to_rc"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_controlRC"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.9"
+            android:padding="30dp"
+            android:layout_height="match_parent">
+
+            <Button
+                android:text="@string/turn_left"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:text="@string/turn_right"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_throttle"
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_throttle_percentage"
+                android:layout_width="32dp"
+                android:layout_height="20dp"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:gravity="center"/>
+
+            <FrameLayout
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <SeekBar
+                    android:id="@+id/sb_throttle_percentage"
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:rotation="270"/>
+
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/ll_controlRC"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ola"/>
+
+        <Switch
+            android:id="@+id/plug_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:maxHeight="10dp"
+            android:thumbTextPadding="25dp"
+            android:switchMinWidth="100dp"
+            android:layout_centerHorizontal="true" />
+    </LinearLayout>
+
+</LinearLayout>

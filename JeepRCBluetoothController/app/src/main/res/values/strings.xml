@@ -4,4 +4,7 @@
     <string name="permissions_denied_desc">Permissions denied. To use the controller you must accept the permissions.</string>
     <string name="bluetooth_off_title">Bluetooth Off</string>
     <string name="bluetooth_off_desc">To use the app you need to turn on the bluetooth.</string>
+    <string name="turn_left">Turn Left</string>
+    <string name="turn_right">Turn Right</string>
+    <string name="connect_to_rc">Connect To RC</string>
 </resources>

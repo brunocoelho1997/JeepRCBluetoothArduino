@@ -11,6 +11,8 @@ import android.content.res.Configuration;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import static com.example.jeeprcbluetoothcontroller.Config.MY_PERMISSIONS_REQUEST_CODE_BT;
 import static com.example.jeeprcbluetoothcontroller.Config.PERMISSIONS;
@@ -18,6 +20,10 @@ import static com.example.jeeprcbluetoothcontroller.Config.PERMISSIONS;
 public class MainActivity extends AppCompatActivity {
 
     private JeepRcController jeepRcController;
+
+    //layout components
+    private Button btnStartDiscoring;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(jeepRcController.isUserHasPermissions())
         {
-            defineLayout();
             defineSensors();
+            defineLayout();
         }
         else
             jeepRcController.requestPermissionsToUser(this);
@@ -43,7 +49,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void defineLayout() {
-
+        btnStartDiscoring = findViewById(R.id.btn_start_discoring);
+        btnStartDiscoring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jeepRcController.verifyIfBluetoothIsEnabled(MainActivity.this);
+                jeepRcController.startDiscoveringDevices(MainActivity.this);
+            }
+        });
     }
 
     private void defineSensors() {
@@ -53,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         jeepRcController.setBluetoothAdapter(bluetoothAdapterTmp);
-        jeepRcController.verifyIfBluetoothIsEnabled(this);
     }
 
     @Override
@@ -69,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        defineLayout();
         defineSensors();
+        defineLayout();
     }
 
     public void throwAlertBuilder(String titleMessage, String descMessage){
@@ -89,4 +101,10 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        jeepRcController.stopDiscoveringDevices(this);
+    }
 }
