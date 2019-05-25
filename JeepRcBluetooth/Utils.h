@@ -1,6 +1,24 @@
 #ifndef Utils_h
 #define Utils_h
 
+
+
+/*
+ * --------------------------------------------------
+ * OBS
+ * 
+ * All commands are beetwen 1 ~265.
+ * Specification:
+ *  1- High Gear
+ *  2- Low Gear
+ *  3- D Gear
+ *  4- R Gear
+ *  5- Steer Left
+ *  6- Steer Right
+ *  10~265 - Throotle
+ *  
+ *  --------------------------------------------------
+ */
 //constants
 
 //types of gear
