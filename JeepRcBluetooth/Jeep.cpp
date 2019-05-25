@@ -20,6 +20,8 @@
       return false;
   
     actualGearType = newGearType;
+
+    return true;
   }
 
   /*
@@ -36,16 +38,18 @@
       return false;
   
     actualGearSelected = newGearSelected;
+
+    return true;
   }
 
  /*
  * This method is called when the user throttle. The method receive a percentage of how much the user is pressing the throttle.
  */
-  boolean Jeep::throttle(int percentage)
+  boolean Jeep::throttle(int value)
   {
 
     //if the percentage received is not valid...
-    if(percentage< 0 || percentage > 100)
+    if(value< minThrottle || value > maxThrottle)
       return false;
       
     /*
@@ -67,7 +71,7 @@
     */
 
     //a tmp var as float just as auxiliary for the calculus. To define the speed of the motor we need to define the PWM in a range 0~255
-    float tmp = 255 * percentage;
+    float tmp = value - 10;
 
     //if the type of the gear selected is the lowGear, we need define the speed as the it's half
     if(actualGearType == lowGear)

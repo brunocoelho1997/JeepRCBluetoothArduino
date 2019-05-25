@@ -17,7 +17,12 @@ const int steeringRight = 6;
 const int steeringSpeed = 50;
 const int timeoutSteering = 2000;
 
-const int throttle = 7;
+const int minThrottle = 10;
+const int maxThrottle = 265; //since the limit of the pwm is 0~255
+
+/*
+ * AVAIABLE POSITIONS TO DEFINE COMMANDS- >=6 <= 9
+ */
 
 
 

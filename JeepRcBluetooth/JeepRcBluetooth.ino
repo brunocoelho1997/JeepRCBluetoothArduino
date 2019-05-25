@@ -15,7 +15,7 @@ void setup() {
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
 
-  Serial.println("Ready to read commands.");
+  Serial.println("Arduino ready to read commands.");
   
 }
 
@@ -24,7 +24,9 @@ void loop() {
   
   // send data to serial only when you receive data:
   if (Serial.available() > 0) {
-
+    
+    printIntro();
+    
     String command = Serial.readString();
 
     Serial.println("Command printed: " + command);
@@ -36,6 +38,8 @@ void loop() {
     
     Serial.println("\nJeep printed:");
     Serial.println(jeep.toString());
+    Serial.println("-----------------------------");
+    
   }
 
 }
@@ -58,6 +62,12 @@ boolean processCommand(String commandTmp)
     case lowGear:
       return jeep.selectGearType(lowGear);
     break;
+    case dGear:
+      return jeep.selectGearSelected(dGear);
+    break;
+    case rGear:
+      return jeep.selectGearSelected(rGear);
+    break;
     
     case steeringLeft:
       return jeep.steering(steeringLeft);
@@ -65,11 +75,25 @@ boolean processCommand(String commandTmp)
     case steeringRight:
       return jeep.steering(steeringRight);
     break;
-    case throttle:
-      boolean result = jeep.throttle(value);
-      value = 0;
-      return result;
-    break;
-    
+    default:
+      //the user is throttling
+      if(command >= minThrottle && command <= maxThrottle)
+        return jeep.throttle(command);    
+      else //unknown command
+        return false;
+    break;    
   }
+}
+
+void printIntro()
+{
+  Serial.println("RC Commands:");
+  Serial.println("1- High Gear");
+  Serial.println("2- Low Gear");
+  Serial.println("3- D Gear");
+  Serial.println("4- R Gear");
+  Serial.println("5- Steer Left");
+  Serial.println("6- Steer Right");
+  Serial.println("10~265 - Throotle");
+  Serial.println("Command:");
 }
