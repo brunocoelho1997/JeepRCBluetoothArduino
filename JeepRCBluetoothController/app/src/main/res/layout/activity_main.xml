@@ -46,6 +46,7 @@
             android:layout_height="match_parent">
 
             <Button
+                android:id="@+id/btn_turn_left"
                 android:text="@string/turn_left"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"

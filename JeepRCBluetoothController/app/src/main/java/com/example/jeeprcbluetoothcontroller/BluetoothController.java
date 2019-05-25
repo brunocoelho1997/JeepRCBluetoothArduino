@@ -14,8 +14,18 @@ import java.util.Set;
 import static com.example.jeeprcbluetoothcontroller.Config.MY_PERMISSIONS_REQUEST_CODE_BT;
 
 public class BluetoothController {
+    private static String TAG = "BluetoothController";
     private BluetoothAdapter bluetoothAdapter;
     private BroadcastReceiver bluetoothBroadcastReceiver;
+
+    //android as client
+    private ConnectThread connectThread;
+
+    //android as server
+    private AcceptThread acceptThread;
+
+    private ConnectedThread connectedThread;
+
 
     public BluetoothController() {
         this.bluetoothBroadcastReceiver = new BroadcastReceiver() {
@@ -37,7 +47,8 @@ public class BluetoothController {
 
                     if(deviceName.equals(Config.bluetoothRCDeviceName) && deviceHardwareAddress.equals(Config.bluetoothRCDeviceHardwareAddress))
                     {
-                        //TODO: start a connection with the RC JEEP
+                        Log.d("startDiscoveringDevices", "WILL CONNECT WITH: Name: " + deviceName + "; DeviceHardwareAddress:" + deviceHardwareAddress);
+                        startConnectionWithRc(device, bluetoothAdapter);
                     };
                 }
             }
@@ -51,23 +62,6 @@ public class BluetoothController {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             ((Activity)context).startActivityForResult(enableBtIntent, MY_PERMISSIONS_REQUEST_CODE_BT);
         }
-    }
-
-    public boolean verifyIfConnectedWithRC(){
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-
-        if (pairedDevices.size() > 0) {
-            // There are paired devices. Get the name and address of each paired device.
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-
-                if(deviceName.equals(Config.bluetoothRCDeviceName) && deviceHardwareAddress.equals(Config.bluetoothRCDeviceHardwareAddress))
-                    return true;
-            }
-            return false;
-        }
-        return false;
     }
 
     public void startDiscoveringDevices(Context context){
@@ -86,7 +80,16 @@ public class BluetoothController {
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
         ((Activity)context).registerReceiver(bluetoothBroadcastReceiver, filter);
-        bluetoothAdapter.startDiscovery();
+
+        if(!bluetoothAdapter.isDiscovering())
+        {
+            bluetoothAdapter.startDiscovery();
+            Log.d("startDiscoringDevices", "Started Bluetooth Discovery.");
+            return;
+        }
+
+        Log.d("startDiscoringDevices", "Bluetooth is already discovering devices.");
+
     }
 
     public void stopDiscoveringDevices(Context context){
@@ -100,6 +103,23 @@ public class BluetoothController {
         }catch (IllegalArgumentException ex){
             Log.d("stopDiscoveringDevices", "The bluetooth Broadcast Receiver was not registered.");
         }
+    }
+
+    public void startConnectionWithRc(BluetoothDevice device, BluetoothAdapter bluetoothAdapter){
+
+        //android as client
+        connectThread = new ConnectThread(device,bluetoothAdapter, connectedThread);
+        connectThread.run();
+
+        //android as server
+        //acceptThread = new AcceptThread(bluetoothAdapter, connectedThread);
+        //acceptThread.run();
+
+    }
+
+    public void cancelConnectionWithRc(){
+        if(connectThread != null)
+            connectThread.cancel();
     }
 
     /*
@@ -119,5 +139,13 @@ public class BluetoothController {
 
     public void setBluetoothBroadcastReceiver(BroadcastReceiver bluetoothBroadcastReceiver) {
         this.bluetoothBroadcastReceiver = bluetoothBroadcastReceiver;
+    }
+
+    public void turnLeft() {
+        if(connectedThread != null && connectedThread.isAlive())
+            connectedThread.turnLeft();
+
+        Log.d(TAG, "Does not exist a connectedThread alive");
+
     }
 }

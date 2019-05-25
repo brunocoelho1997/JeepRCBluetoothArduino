@@ -87,16 +87,28 @@
     //if the percentage received is not valid...
     if(steeringSide != steeringLeft && steeringSide != steeringRight)
       return false;
-      
+
+    
+     
     if(steeringSide == steeringLeft)
     {
       digitalWrite(in3, HIGH);
+      digitalWrite(in4, LOW);
+      Serial.println("Jeep: Steering left");
+
+      delay(timeoutSteering);
+      digitalWrite(in3, LOW);
       digitalWrite(in4, LOW);
     }
     else
     {
       digitalWrite(in3, LOW);
       digitalWrite(in4, HIGH);
+      Serial.println("Jeep: Steering right");
+
+      delay(timeoutSteering);
+      digitalWrite(in3, LOW);
+      digitalWrite(in4, LOW);
     }
 
     analogWrite(enB, steeringSpeed);
@@ -107,9 +119,8 @@
   String Jeep::toString()
   {
     String str = "";
-    str += "Jeep \nActual Gear Selected: " + actualGearSelected;
-    str += "Jeep \nActual Gear Type: " + actualGearType;
-    
+    str += "Actual Gear Selected: " + String(actualGearSelected) + "\n";
+    str += "Actual Gear Type: " + String(actualGearType);
     
     return str;
   }

@@ -23,15 +23,13 @@ public class MainActivity extends AppCompatActivity {
 
     //layout components
     private Button btnStartDiscoring;
+    private Button btnTurnLeft;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //set the activity always as portrait orientation
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         this.jeepRcController = new JeepRcController();
 
@@ -55,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 jeepRcController.verifyIfBluetoothIsEnabled(MainActivity.this);
                 jeepRcController.startDiscoveringDevices(MainActivity.this);
+            }
+        });
+
+        btnTurnLeft = findViewById(R.id.btn_turn_left);
+        btnTurnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jeepRcController.turnLeft();
             }
         });
     }

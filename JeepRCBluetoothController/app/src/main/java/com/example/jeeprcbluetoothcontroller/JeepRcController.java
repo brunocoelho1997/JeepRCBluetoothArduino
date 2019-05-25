@@ -67,6 +67,12 @@ public class JeepRcController {
     }
 
     public void startDiscoveringDevices(Context context){
+
+        Intent discoverableIntent =
+                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        context.startActivity(discoverableIntent);
+
         bluetoothController.startDiscoveringDevices(context);
     }
 
@@ -74,6 +80,9 @@ public class JeepRcController {
         bluetoothController.stopDiscoveringDevices(context);
     }
 
+    public void turnLeft(){
+        bluetoothController.turnLeft();
+    }
 
 
 }

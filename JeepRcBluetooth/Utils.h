@@ -14,7 +14,8 @@ const int rGear = 4;
 //turn left/right
 const int steeringLeft = 5;
 const int steeringRight = 6;
-const int steeringSpeed = 200;
+const int steeringSpeed = 50;
+const int timeoutSteering = 2000;
 
 const int throttle = 7;
 
@@ -31,8 +32,6 @@ const int enB = 3;
 const int in3 = 5;
 const int in4 = 4;
 
-//delimiter of commands
-const String commandDelimiter = "_";
 
 /*
  * ---FONTS----
