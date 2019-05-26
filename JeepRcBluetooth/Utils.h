@@ -19,18 +19,14 @@
  */
 //constants
 
-//types of gear
-const int highGear = 1;
-const int lowGear = 2;
-
 //selected gear
-const int dGear= 3;
-const int rGear = 4;
+const int dGear= 1;
+const int rGear = 2;
 
 //turn left/right
-const int steeringLeft = 5;
-const int steeringRight = 6;
-const int steeringSpeed = 50;
+const int steeringLeft = 3;
+const int steeringRight = 4;
+const int steeringSpeed = 255;
 const int timeoutSteering = 2000;
 
 const int minThrottle = 10;
