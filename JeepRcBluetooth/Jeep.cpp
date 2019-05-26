@@ -3,27 +3,8 @@
 
   Jeep::Jeep(){
     actualGearSelected = dGear;
-    actualGearType = lowGear;
   }
   
-  /*
-   * May select a low Gear or a high gear to the jeep. If it does successfully it will return true, otherwise returns false
-   */
-  boolean Jeep::selectGearType(int newGearType)
-  {
-    //if the gear is not recognized...
-    if(newGearType != highGear && newGearType != lowGear)
-      return false;
-  
-    //if it's the same gear...
-    if (newGearType == actualGearType)
-      return false;
-  
-    actualGearType = newGearType;
-
-    return true;
-  }
-
   /*
    *  The user may select a gear. The gear selected may be a D (forward) or R (reverse)
    */
@@ -65,20 +46,30 @@
       digitalWrite(in1, LOW);
       digitalWrite(in2, HIGH);
     }
+
     
     /*
     *  after direction defines we must define the pulse width modulation (PWM) - speed of the motor.
     */
+    
+    if(value == 10) //means to stop throotling
+    {
+      analogWrite(enA, 0);
+      return true;
+    }
 
+    
     //a tmp var as float just as auxiliary for the calculus. To define the speed of the motor we need to define the PWM in a range 0~255
+    //since commands between 1~10 are steering, gears etc we need to decrement 10
     float tmp = value - 10;
-
-    //if the type of the gear selected is the lowGear, we need define the speed as the it's half
-    if(actualGearType == lowGear)
-      tmp = tmp * 0.5;
+  
+    tmp = minPwmOfMotor + (155 * tmp/100);
     
     int pwm = (int) tmp;
     analogWrite(enA, pwm);
+
+
+    Serial.println("pwm:" + String(pwm));
 
     return true;
   }
@@ -124,7 +115,6 @@
   {
     String str = "";
     str += "Actual Gear Selected: " + String(actualGearSelected) + "\n";
-    str += "Actual Gear Type: " + String(actualGearType);
     
     return str;
   }

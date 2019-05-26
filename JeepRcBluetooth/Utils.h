@@ -9,13 +9,11 @@
  * 
  * All commands are beetwen 1 ~265.
  * Specification:
- *  1- High Gear
- *  2- Low Gear
- *  3- D Gear
- *  4- R Gear
- *  5- Steer Left
- *  6- Steer Right
- *  10~265 - Throotle
+ *  1- D Gear
+ *  2- R Gear
+ *  3- Steer Left
+ *  4- Steer Right
+ *  10~110 - Throotle
  *  
  *  --------------------------------------------------
  */
@@ -36,7 +34,10 @@ const int steeringSpeed = 50;
 const int timeoutSteering = 2000;
 
 const int minThrottle = 10;
-const int maxThrottle = 265; //since the limit of the pwm is 0~255
+const int maxThrottle = 110; //the range of the throotle is 0~100
+
+const int minPwmOfMotor = 100; //the range of pwm will be 100~255
+
 
 /*
  * AVAIABLE POSITIONS TO DEFINE COMMANDS- >=6 <= 9

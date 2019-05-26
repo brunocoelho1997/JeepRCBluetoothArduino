@@ -56,12 +56,6 @@ boolean processCommand(String commandTmp)
   
   switch(command)
   {
-    case highGear:
-      return jeep.selectGearType(highGear);
-    break;
-    case lowGear:
-      return jeep.selectGearType(lowGear);
-    break;
     case dGear:
       return jeep.selectGearSelected(dGear);
     break;
@@ -88,12 +82,10 @@ boolean processCommand(String commandTmp)
 void printIntro()
 {
   Serial.println("RC Commands:");
-  Serial.println("1- High Gear");
-  Serial.println("2- Low Gear");
-  Serial.println("3- D Gear");
-  Serial.println("4- R Gear");
-  Serial.println("5- Steer Left");
-  Serial.println("6- Steer Right");
-  Serial.println("10~265 - Throotle");
+  Serial.println("1- D Gear");
+  Serial.println("2- R Gear");
+  Serial.println("3- Steer Left");
+  Serial.println("4- Steer Right");
+  Serial.println("10~110 - Throotle");
   Serial.println("Command:");
 }
