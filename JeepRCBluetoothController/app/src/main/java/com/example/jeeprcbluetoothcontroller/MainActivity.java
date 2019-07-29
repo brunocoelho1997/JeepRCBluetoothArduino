@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.jeepRcController = new JeepRcController();
+        this.jeepRcController = new JeepRcController(getApplicationContext());
 
         boolean userHasPermissionsTmp = jeepRcController.hasPermissions(this, PERMISSIONS);
         jeepRcController.setUserHasPermissions(userHasPermissionsTmp);
@@ -64,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         btnTurnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jeepRcController.turnLeft();
+                boolean result = jeepRcController.turnLeft();
+                if(!result)
+                    Toast.makeText(getApplicationContext(), "Error with connection with the RC.", Toast.LENGTH_LONG).show();
+
             }
         });
     }

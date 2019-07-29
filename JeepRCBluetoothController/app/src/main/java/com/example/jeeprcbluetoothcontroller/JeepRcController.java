@@ -21,8 +21,8 @@ public class JeepRcController {
     private boolean userHasPermissions;
     private BluetoothController bluetoothController;
 
-    public JeepRcController() {
-        this.bluetoothController = new BluetoothController();
+    public JeepRcController(Context context) {
+        this.bluetoothController = new BluetoothController(context);
     }
 
     public boolean hasPermissions(Context context, String... permissions) {
@@ -70,8 +70,8 @@ public class JeepRcController {
         return bluetoothController.startDiscoveringDevices(context);
     }
 
-    public void turnLeft(){
-        bluetoothController.turnLeft();
+    public boolean turnLeft(){
+        return bluetoothController.turnLeft();
     }
 
 

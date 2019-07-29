@@ -26,21 +26,15 @@ public class BluetoothController {
     private static String TAG = "BluetoothController";
     private BluetoothAdapter bluetoothAdapter;
 
-    //android as client
-    private ConnectThread connectThread;
-
-    //android as server
-    private AcceptThread acceptThread;
-
-    private ConnectedThread connectedThread;
-
     String bluetoothAddressArduino;
     private BluetoothSocket mmSocket;
     private BluetoothDevice mmDevice;
     private boolean isBtConnected = false;
 
-    public BluetoothController() {
+    private Context context;
 
+    public BluetoothController(Context context) {
+        this.context = context;
     }
 
     public void verifyIfBluetoothIsEnabled(Context context){
@@ -78,8 +72,7 @@ public class BluetoothController {
                     //start the connection with the bt device
                     new BluetoothConnection().execute();
 
-                    return "Started the connection with the Jeep";
-
+                    return "Starting the connection with the Jeep...";
                 }
             }
             return "Didn't find a paired device with name HC-06. It's necessary to pair the Android with the device. Pin: 1234";
@@ -88,23 +81,24 @@ public class BluetoothController {
         return "No Paired Bluetooth Devices Found.";
     }
 
-    public void turnLeft() {
+    public boolean turnLeft() {
 
         try {
+            if(mmSocket == null)
+                return false;
+
             mmSocket.getOutputStream().write("0".toString().getBytes());
 
             Log.d(TAG, "Sent value to android");
 
+            return true;
+
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "Does not exist a connectedThread alive. Error: " + e);
+            return false;
         }
     }
-
-
-
-
-
 
     private class BluetoothConnection extends AsyncTask<Void, Void, Void>  // UI thread
     {
@@ -113,7 +107,7 @@ public class BluetoothController {
         @Override
         protected void onPreExecute()
         {
-            //progress = ProgressDialog.show(con, "Connecting...", "Please wait!!!");  //show a progress dialog
+            Toast.makeText(context, "Connecting with the bluetooth rc...", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -124,8 +118,8 @@ public class BluetoothController {
                 if (mmSocket == null || !isBtConnected)
                 {
                     bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
-                    BluetoothDevice device = bluetoothAdapter.getRemoteDevice(bluetoothAddressArduino);//connects to the device's address and checks if it's available
-                    mmSocket = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString(Config.RC_UUID));//create a RFCOMM (SPP) connection
+                    mmDevice = bluetoothAdapter.getRemoteDevice(bluetoothAddressArduino);//connects to the device's address and checks if it's available
+                    mmSocket = mmDevice.createInsecureRfcommSocketToServiceRecord(UUID.fromString(Config.RC_UUID));//create a RFCOMM (SPP) connection
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     mmSocket.connect();//start connection
                 }
@@ -133,6 +127,8 @@ public class BluetoothController {
             catch (IOException e)
             {
                 ConnectSuccess = false;//if the try failed, you can check the exception here
+                Log.d("BluetoothController" , "error: " + e.getMessage());
+
             }
             return null;
         }
@@ -140,20 +136,13 @@ public class BluetoothController {
         protected void onPostExecute(Void result) //after the doInBackground, it checks if everything went fine
         {
             super.onPostExecute(result);
-/*
+
             if (!ConnectSuccess)
-            {
-                msg("Connection Failed. Is it a SPP Bluetooth? Try again.");
-                finish();
-            }
+                Toast.makeText(context, "Error with connection with the bluetooth RC. Verify if the RC is on.", Toast.LENGTH_LONG).show();
             else
-            {
-                msg("Connected.");
-                isBtConnected = true;
-            }
-            progress.dismiss();
-        }
-        */
+                Toast.makeText(context, "Connetion initilizated with success.", Toast.LENGTH_LONG).show();
+
+
         }
     }
 
