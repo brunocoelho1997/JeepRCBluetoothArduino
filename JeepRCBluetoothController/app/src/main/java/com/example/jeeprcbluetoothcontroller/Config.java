@@ -15,6 +15,6 @@ public class Config {
 
 
     public static final String bluetoothRCControllerDeviceName = "RCControllerAndroid";
-    public static final String RC_UUID = "93eec396-77fc-11e9-8f9e-2a86e4085a59"; // RC_UUID is the app's UUID string, also used in the server code.
+    public static final String RC_UUID = "00001101-0000-1000-8000-00805F9B34FB"; // RC_UUID is the app's UUID string, also used in the server code.
 
 }

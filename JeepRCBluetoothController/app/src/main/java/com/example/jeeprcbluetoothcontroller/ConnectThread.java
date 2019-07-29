@@ -32,6 +32,7 @@ public class ConnectThread extends Thread {
             // Get a BluetoothSocket to connect with the given BluetoothDevice.
             // RC_UUID is the app's UUID string, also used in the server code.
             tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(Config.RC_UUID));
+            this.bluetoothAdapter.cancelDiscovery();
         } catch (IOException e) {
             Log.e(TAG, "Socket's create() method failed", e);
         }
@@ -40,7 +41,7 @@ public class ConnectThread extends Thread {
 
     public void run() {
         // Cancel discovery because it otherwise slows down the connection.
-        bluetoothAdapter.cancelDiscovery();
+        //bluetoothAdapter.cancelDiscovery();
 
         try {
 
@@ -65,7 +66,7 @@ public class ConnectThread extends Thread {
 
         // The connection attempt succeeded. Perform work associated with
         // the connection in a separate thread.
-        manageMyConnectedSocket(mmSocket);
+        //manageMyConnectedSocket(mmSocket);
     }
 
     private void manageMyConnectedSocket(BluetoothSocket mmSocket) {

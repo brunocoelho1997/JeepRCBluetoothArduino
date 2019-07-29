@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.UUID;
 
 import static com.example.jeeprcbluetoothcontroller.Config.MY_PERMISSIONS_REQUEST_CODE_BT;
 import static com.example.jeeprcbluetoothcontroller.Config.PERMISSIONS;
@@ -24,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     //layout components
     private Button btnStartDiscoring;
     private Button btnTurnLeft;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else
             jeepRcController.requestPermissionsToUser(this);
-
     }
 
     private void defineLayout() {
@@ -52,7 +53,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 jeepRcController.verifyIfBluetoothIsEnabled(MainActivity.this);
-                jeepRcController.startDiscoveringDevices(MainActivity.this);
+                String result = jeepRcController.startDiscoveringDevices(MainActivity.this);
+
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -111,6 +115,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        jeepRcController.stopDiscoveringDevices(this);
+        //jeepRcController.stopDiscoveringDevices(this);
     }
 }

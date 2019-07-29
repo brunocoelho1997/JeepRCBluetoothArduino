@@ -1,22 +1,30 @@
 package com.example.jeeprcbluetoothcontroller;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static com.example.jeeprcbluetoothcontroller.Config.MY_PERMISSIONS_REQUEST_CODE_BT;
 
 public class BluetoothController {
     private static String TAG = "BluetoothController";
     private BluetoothAdapter bluetoothAdapter;
-    private BroadcastReceiver bluetoothBroadcastReceiver;
 
     //android as client
     private ConnectThread connectThread;
@@ -26,33 +34,13 @@ public class BluetoothController {
 
     private ConnectedThread connectedThread;
 
+    String bluetoothAddressArduino;
+    private BluetoothSocket mmSocket;
+    private BluetoothDevice mmDevice;
+    private boolean isBtConnected = false;
 
     public BluetoothController() {
-        this.bluetoothBroadcastReceiver = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
 
-                if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                    //discovery starts, we can show progress dialog or perform other tasks
-                } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                    //discovery finishes, dismis progress dialog
-                } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    //bluetooth device found
-                    BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-                    String deviceName = device.getName();
-                    String deviceHardwareAddress = device.getAddress(); // MAC address
-
-                    Log.d("startDiscoveringDevices", "DEVICE HAS BEEN FOUND: Name: " + deviceName + "; DeviceHardwareAddress:" + deviceHardwareAddress);
-
-                    if(deviceName.equals(Config.bluetoothRCDeviceName) && deviceHardwareAddress.equals(Config.bluetoothRCDeviceHardwareAddress))
-                    {
-                        Log.d("startDiscoveringDevices", "WILL CONNECT WITH: Name: " + deviceName + "; DeviceHardwareAddress:" + deviceHardwareAddress);
-                        startConnectionWithRc(device, bluetoothAdapter);
-                    };
-                }
-            }
-        };
     }
 
     public void verifyIfBluetoothIsEnabled(Context context){
@@ -64,62 +52,109 @@ public class BluetoothController {
         }
     }
 
-    public void startDiscoveringDevices(Context context){
-        // Register for broadcasts when a device is discovered.
+    public String startDiscoveringDevices(Context context){
 
+        //verify again if the bluetooth is enabled... just for precaution
         if(!bluetoothAdapter.isEnabled())
         {
             Log.d("startDiscoringDevices", "Bluetooth isn't enabled.");
-            return;
+            return "Bluetooth isn't enabled.";
         }
 
-        IntentFilter filter = new IntentFilter();
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-
-        ((Activity)context).registerReceiver(bluetoothBroadcastReceiver, filter);
-
-        if(!bluetoothAdapter.isDiscovering())
+        if (pairedDevices.size()>0)
         {
-            bluetoothAdapter.startDiscovery();
-            Log.d("startDiscoringDevices", "Started Bluetooth Discovery.");
-            return;
-        }
-
-        Log.d("startDiscoringDevices", "Bluetooth is already discovering devices.");
-
-    }
-
-    public void stopDiscoveringDevices(Context context){
-
-        try{
-            if(bluetoothBroadcastReceiver != null)
+            for(BluetoothDevice bt : pairedDevices)
             {
-                context.unregisterReceiver(bluetoothBroadcastReceiver);
-                Log.d("stopDiscoveringDevices", "Unregistered the bluetoothBroadcastReceiver");
+                Log.d("BluetoothController", "paired device: " + bt.getName() + "\n" + bt.getAddress());
+
+                if(bt.getName().equals("HC-06"))
+                {
+                    String info = bt.getAddress();
+                    String address = info.substring(info.length() - 17);
+                    this.bluetoothAddressArduino = address;
+
+                    //start the connection with the bt device
+                    new BluetoothConnection().execute();
+
+                    return "Started the connection with the Jeep";
+
+                }
             }
-        }catch (IllegalArgumentException ex){
-            Log.d("stopDiscoveringDevices", "The bluetooth Broadcast Receiver was not registered.");
+            return "Didn't find a paired device with name HC-06. It's necessary to pair the Android with the device. Pin: 1234";
+        }
+
+        return "No Paired Bluetooth Devices Found.";
+    }
+
+    public void turnLeft() {
+
+        try {
+            mmSocket.getOutputStream().write("0".toString().getBytes());
+
+            Log.d(TAG, "Sent value to android");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Does not exist a connectedThread alive. Error: " + e);
         }
     }
 
-    public void startConnectionWithRc(BluetoothDevice device, BluetoothAdapter bluetoothAdapter){
 
-        //android as client
-        connectThread = new ConnectThread(device,bluetoothAdapter, connectedThread);
-        connectThread.run();
 
-        //android as server
-        //acceptThread = new AcceptThread(bluetoothAdapter, connectedThread);
-        //acceptThread.run();
 
-    }
 
-    public void cancelConnectionWithRc(){
-        if(connectThread != null)
-            connectThread.cancel();
+
+    private class BluetoothConnection extends AsyncTask<Void, Void, Void>  // UI thread
+    {
+        private boolean ConnectSuccess = true; //if it's here, it's almost connected
+
+        @Override
+        protected void onPreExecute()
+        {
+            //progress = ProgressDialog.show(con, "Connecting...", "Please wait!!!");  //show a progress dialog
+        }
+
+        @Override
+        protected Void doInBackground(Void... devices) //while the progress dialog is shown, the connection is done in background
+        {
+            try
+            {
+                if (mmSocket == null || !isBtConnected)
+                {
+                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
+                    BluetoothDevice device = bluetoothAdapter.getRemoteDevice(bluetoothAddressArduino);//connects to the device's address and checks if it's available
+                    mmSocket = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString(Config.RC_UUID));//create a RFCOMM (SPP) connection
+                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                    mmSocket.connect();//start connection
+                }
+            }
+            catch (IOException e)
+            {
+                ConnectSuccess = false;//if the try failed, you can check the exception here
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) //after the doInBackground, it checks if everything went fine
+        {
+            super.onPostExecute(result);
+/*
+            if (!ConnectSuccess)
+            {
+                msg("Connection Failed. Is it a SPP Bluetooth? Try again.");
+                finish();
+            }
+            else
+            {
+                msg("Connected.");
+                isBtConnected = true;
+            }
+            progress.dismiss();
+        }
+        */
+        }
     }
 
     /*
@@ -131,21 +166,5 @@ public class BluetoothController {
 
     public void setBluetoothAdapter(BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
-    }
-
-    public BroadcastReceiver getBluetoothBroadcastReceiver() {
-        return bluetoothBroadcastReceiver;
-    }
-
-    public void setBluetoothBroadcastReceiver(BroadcastReceiver bluetoothBroadcastReceiver) {
-        this.bluetoothBroadcastReceiver = bluetoothBroadcastReceiver;
-    }
-
-    public void turnLeft() {
-        if(connectedThread != null && connectedThread.isAlive())
-            connectedThread.turnLeft();
-
-        Log.d(TAG, "Does not exist a connectedThread alive");
-
     }
 }

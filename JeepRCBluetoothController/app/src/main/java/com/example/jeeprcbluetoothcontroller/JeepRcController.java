@@ -66,18 +66,8 @@ public class JeepRcController {
         return verifyIfConnectedWithRC();
     }
 
-    public void startDiscoveringDevices(Context context){
-
-        Intent discoverableIntent =
-                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        context.startActivity(discoverableIntent);
-
-        bluetoothController.startDiscoveringDevices(context);
-    }
-
-    public void stopDiscoveringDevices(Context context){
-        bluetoothController.stopDiscoveringDevices(context);
+    public String startDiscoveringDevices(Context context){
+        return bluetoothController.startDiscoveringDevices(context);
     }
 
     public void turnLeft(){
