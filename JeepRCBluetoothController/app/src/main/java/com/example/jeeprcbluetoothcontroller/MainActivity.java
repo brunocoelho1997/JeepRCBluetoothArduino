@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.util.UUID;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     //layout components
     private Button btnStartDiscoring;
     private Button btnTurnLeft;
+    private Button btnTurnRight;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,38 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        btnTurnRight = findViewById(R.id.btn_turn_right);
+        btnTurnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean result = jeepRcController.turnRight();
+                if(!result)
+                    Toast.makeText(getApplicationContext(), "Error with connection with the RC.", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        seekBar = findViewById(R.id.sb_throttle_percentage);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                boolean result = jeepRcController.throotle(progress);
+                if(!result)
+                    Toast.makeText(getApplicationContext(), "Error with connection with the RC.", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
     }
 
     private void defineSensors() {

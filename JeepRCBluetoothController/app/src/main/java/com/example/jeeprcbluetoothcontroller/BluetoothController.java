@@ -30,8 +30,8 @@ public class BluetoothController {
     private BluetoothSocket mmSocket;
     private BluetoothDevice mmDevice;
     private boolean isBtConnected = false;
-
     private Context context;
+    private int lastThrootlePercentageTmp;
 
     public BluetoothController(Context context) {
         this.context = context;
@@ -81,13 +81,33 @@ public class BluetoothController {
         return "No Paired Bluetooth Devices Found.";
     }
 
-    public boolean turnLeft() {
+
+    public boolean turnLeft(){return sendCommand(Config.steeringLeft);}
+
+    public boolean turnRight(){return sendCommand(Config.steeringRight);}
+
+    public boolean setDGear(){return sendCommand(Config.dGear);}
+
+    public boolean setRGear(){return sendCommand(Config.rGear);}
+
+    public boolean throotle(int throotlePercentage) {
+
+        if(Math.abs(throotlePercentage - lastThrootlePercentageTmp) > Config.throotleBias || throotlePercentage==0 || throotlePercentage==100) //if the throotle percentage equals 0 ou 100 ignore the bias
+        {
+            lastThrootlePercentageTmp = throotlePercentage;
+            return sendCommand("" + throotlePercentage);
+        }
+        return true;
+    }
+
+    public boolean sendCommand(String command) {
 
         try {
             if(mmSocket == null)
                 return false;
 
-            mmSocket.getOutputStream().write("0".toString().getBytes());
+            String commandTmp = command + "-";
+            mmSocket.getOutputStream().write(commandTmp.getBytes());
 
             Log.d(TAG, "Sent value to android");
 

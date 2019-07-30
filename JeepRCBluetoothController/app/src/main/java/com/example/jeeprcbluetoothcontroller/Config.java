@@ -17,4 +17,16 @@ public class Config {
     public static final String bluetoothRCControllerDeviceName = "RCControllerAndroid";
     public static final String RC_UUID = "00001101-0000-1000-8000-00805F9B34FB"; // RC_UUID is the app's UUID string, also used in the server code.
 
+
+    //selected gear
+    public static String dGear= "1";
+    public static String rGear = "2";
+
+    //turn left/right
+    public static String steeringLeft = "3";
+    public static String steeringRight = "4";
+
+    public static int throotleBias = 5;
+
+
 }

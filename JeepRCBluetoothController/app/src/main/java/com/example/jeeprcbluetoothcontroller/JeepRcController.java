@@ -73,6 +73,8 @@ public class JeepRcController {
     public boolean turnLeft(){
         return bluetoothController.turnLeft();
     }
+    public boolean turnRight(){ return bluetoothController.turnRight(); }
 
 
+    public boolean throotle(int throotlePercentage) {return bluetoothController.throotle(throotlePercentage);}
 }

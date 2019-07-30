@@ -55,6 +55,7 @@
 
             <Button
                 android:text="@string/turn_right"
+                android:id="@+id/btn_turn_right"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight="1"

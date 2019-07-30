@@ -2,6 +2,8 @@
 #include "Utils.h"
 
 Jeep jeep;
+char incomingValue = 0;
+String bufferTmp = "";
 
 void setup() {
 
@@ -24,7 +26,11 @@ void loop() {
   
   // send data to serial only when you receive data:
   if (Serial.available() > 0) {
-    
+
+    incomingValue = Serial.read();
+    Serial.println(getReceivedCommandProcessed(incomingValue));
+    delay(100);
+    /*
     printIntro();
     
     String command = Serial.readString();
@@ -39,7 +45,7 @@ void loop() {
     Serial.println("\nJeep printed:");
     Serial.println(jeep.toString());
     Serial.println("-----------------------------");
-    
+    */
   }
 
 }
@@ -88,4 +94,26 @@ void printIntro()
   Serial.println("4- Steer Right");
   Serial.println("10~110 - Throotle");
   Serial.println("Command:");
+}
+
+String getReceivedCommandProcessed(char incomingBytes)
+{
+  if(incomingValue == '-')
+  {
+    //Serial.print("bufferTmp: ");
+    //Serial.print(bufferTmp);
+    //Serial.print("\n");
+    
+    String tmp = bufferTmp;
+    
+    bufferTmp = "";
+
+    return tmp;
+  }
+  else
+  {
+    bufferTmp = bufferTmp + incomingValue;
+  }
+
+  return "";
 }
