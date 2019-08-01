@@ -13,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.UUID;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnTurnLeft;
     private Button btnTurnRight;
     private SeekBar seekBar;
+    private Switch swtButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+
+        swtButton = findViewById(R.id.plug_switch);
+        swtButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                boolean result = jeepRcController.setDGear(isChecked);
+                if(!result)
+                    Toast.makeText(getApplicationContext(), "Error with connection with the RC.", Toast.LENGTH_LONG).show();
             }
         });
 

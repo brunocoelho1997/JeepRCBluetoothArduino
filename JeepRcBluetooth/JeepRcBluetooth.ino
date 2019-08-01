@@ -1,9 +1,20 @@
 #include "Jeep.h"
 #include "Utils.h"
 
-Jeep jeep;
-char incomingValue = 0;
-String bufferTmp = "";
+Jeep jeep; //the object which control the jeep
+char incomingValue = 0; //temporary var which save the values which are received by bluetooth
+String bufferTmp = ""; //buffer to save higher values than 1 byte of incomingValue
+
+
+/*
+ * 
+ * To compile this code it's necessary to remove Bluetooth module Tx Rx connection.
+ * The default password of the HC-06 it's 1234
+ * To connect the Android and the Arduino they have to be paired
+ * 
+ */
+
+
 
 void setup() {
 

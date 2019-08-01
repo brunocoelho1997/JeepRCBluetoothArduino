@@ -77,4 +77,10 @@ public class JeepRcController {
 
 
     public boolean throotle(int throotlePercentage) {return bluetoothController.throotle(throotlePercentage);}
+
+    public boolean setDGear(boolean isChecked) {
+        if(isChecked)
+            return bluetoothController.setDGear();
+        return bluetoothController.setRGear();
+    }
 }
