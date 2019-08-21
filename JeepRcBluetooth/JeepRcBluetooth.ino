@@ -39,24 +39,36 @@ void loop() {
   if (Serial.available() > 0) {
 
     incomingValue = Serial.read();
-    Serial.println(getReceivedCommandProcessed(incomingValue));
-    delay(100);
-    /*
-    printIntro();
     
-    String command = Serial.readString();
+    String command = getReceivedCommandProcessed(incomingValue);
 
-    Serial.println("Command printed: " + command);
+    if(command.equals(""))
+        return;
+    
+    //Serial.println(command);
 
     boolean result = processCommand(command);
-
-    if(result == false)
-      Serial.println("\nError processing the command.");
-    
-    Serial.println("\nJeep printed:");
-    Serial.println(jeep.toString());
-    Serial.println("-----------------------------");
-    */
+//
+//    if(result == false)
+//      Serial.println("\nError processing the command.");
+//    
+    delay(100);
+//    
+//    printIntro();
+//    
+//    String command = Serial.readString();
+//
+//    Serial.println("Command printed: " + command);
+//
+//    boolean result = processCommand(command);
+//
+//    if(result == false)
+//      Serial.println("\nError processing the command.");
+//    
+//    Serial.println("\nJeep printed:");
+//    Serial.println(jeep.toString());
+//    Serial.println("-----------------------------");
+//    
   }
 
 }

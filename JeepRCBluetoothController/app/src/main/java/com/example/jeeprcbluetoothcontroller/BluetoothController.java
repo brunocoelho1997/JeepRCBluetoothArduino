@@ -95,6 +95,13 @@ public class BluetoothController {
         if(Math.abs(throotlePercentage - lastThrootlePercentageTmp) > Config.throotleBias || throotlePercentage==0 || throotlePercentage==100) //if the throotle percentage equals 0 ou 100 ignore the bias
         {
             lastThrootlePercentageTmp = throotlePercentage;
+
+            if(throotlePercentage==0)
+                return sendCommand("" + Config.MIN_THROOTLE);
+
+            if(throotlePercentage==100)
+                return sendCommand("" + Config.MAX_THROOTLE);
+
             return sendCommand("" + throotlePercentage);
         }
         return true;

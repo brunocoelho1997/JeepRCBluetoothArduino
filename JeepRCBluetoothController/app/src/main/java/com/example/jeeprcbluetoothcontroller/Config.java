@@ -9,11 +9,6 @@ public class Config {
 
     public static final int MY_PERMISSIONS_REQUEST_CODE_BT = 2;
 
-
-    public static final String bluetoothRCDeviceName = "DESKTOP-R4QJLEB";
-    public static final String bluetoothRCDeviceHardwareAddress = "30:E3:7A:7F:CC:8F"; // MAC address
-
-
     public static final String bluetoothRCControllerDeviceName = "RCControllerAndroid";
     public static final String RC_UUID = "00001101-0000-1000-8000-00805F9B34FB"; // RC_UUID is the app's UUID string, also used in the server code.
 
@@ -26,7 +21,10 @@ public class Config {
     public static String steeringLeft = "3";
     public static String steeringRight = "4";
 
-    public static int throotleBias = 5;
+    public static int throotleBias = 50;
+    public static int MIN_THROOTLE= 10;
+    public static int MAX_THROOTLE= 110;
+
 
 
 }

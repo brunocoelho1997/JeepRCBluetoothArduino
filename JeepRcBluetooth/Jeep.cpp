@@ -55,6 +55,7 @@
     if(value == 10) //means to stop throotling
     {
       analogWrite(enA, 0);
+      //Serial.println("Stopped the motor.");
       return true;
     }
 
@@ -68,8 +69,7 @@
     int pwm = (int) tmp;
     analogWrite(enA, pwm);
 
-
-    Serial.println("pwm:" + String(pwm));
+    //Serial.println("pwm:" + String(pwm));
 
     return true;
   }
@@ -89,7 +89,7 @@
     {
       digitalWrite(in3, HIGH);
       digitalWrite(in4, LOW);
-      Serial.println("Jeep: Steering left");
+      //Serial.println("Jeep: Steering left");
 
       delay(timeoutSteering);
       digitalWrite(in3, LOW);
@@ -99,7 +99,7 @@
     {
       digitalWrite(in3, LOW);
       digitalWrite(in4, HIGH);
-      Serial.println("Jeep: Steering right");
+      //Serial.println("Jeep: Steering right");
 
       delay(timeoutSteering);
       digitalWrite(in3, LOW);
